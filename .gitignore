@@ -1,0 +1,55 @@
+# Dependency directories
+node_modules
+*.json
+
+### Windows ###
+Thumbs.db
+ehthumbs.db
+*.zip
+*.rar
+*.7z
+*.iso
+*.tgz
+*.map
+*.lnk
+*.dmg
+*.gz
+*.jar
+*.tar
+
+# Folder config file
+Desktop.ini
+
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.DS_Store
+.AppleDouble
+.LSOverride

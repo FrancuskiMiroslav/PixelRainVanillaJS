@@ -1,0 +1,121 @@
+// responsive fonts
+@function strip-unit($value) {
+	@return $value / ($value * 0 + 1);
+}
+
+@mixin fluid-typo($min-vw, $max-vw, $min-font-size, $max-font-size) {
+	$u1: unit($min-vw);
+	$u2: unit($max-vw);
+	$u3: unit($min-font-size);
+	$u4: unit($max-font-size);
+
+	@if $u1 == $u2 and $u1 == $u3 and $u1 == $u4 {
+		& {
+			font-size: $min-font-size;
+			@media screen and (min-width: $min-vw) {
+				font-size: calc(
+					#{$min-font-size} + #{strip-unit($max-font-size - $min-font-size)} *
+						((100vw - #{$min-vw}) / #{strip-unit($max-vw - $min-vw)})
+				);
+			}
+			@media screen and (min-width: $max-vw) {
+				font-size: $max-font-size;
+			}
+		}
+	}
+}
+
+// media queries
+@mixin breakpoint-min($point) {
+	@media (min-width: #{$point}px) {
+		@content;
+	}
+}
+
+@mixin breakpoint-max($point) {
+	@media (max-width: #{$point}px) {
+		@content;
+	}
+}
+
+@mixin breakpoint-min-max($point-min, $point-max) {
+	@media (min-width: #{$point-min}px) and (max-width: #{$point-max}px) {
+		@content;
+	}
+}
+
+// clearfix
+@mixin clearfix {
+	&:before,
+	&:after {
+		content: '';
+		display: table;
+	}
+	&:after {
+		clear: both;
+	}
+}
+
+@mixin css3-prefix($prop, $value) {
+	-webkit-#{$prop}: #{$value};
+	-moz-#{$prop}: #{$value};
+	-ms-#{$prop}: #{$value};
+	-o-#{$prop}: #{$value};
+	#{$prop}: #{$value};
+}
+
+@mixin font-face($name, $file) {
+	@font-face {
+		font-family: '#{$name}';
+		src: url('./assets/fonts/#{$file}.eot');
+		src: url('./assets/fonts/#{$file}.eot?#iefix') format('embedded-opentype'),
+			url('./assets/fonts/#{$file}.woff') format('woff'),
+			url('./assets/fonts/#{$file}.ttf') format('truetype'),
+			url('./assets/fonts/#{$file}.svg?#webfont') format('svg');
+	}
+}
+
+@mixin btn {
+	border: 1px solid $tertiary_clr;
+	color: $tertiary_clr;
+	padding: 10px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 20px;
+	cursor: pointer;
+}
+
+@mixin easeInOut {
+	transition: all 0.8s ease-in-out;
+}
+
+@mixin fixedFooter {
+	min-height: calc(100vh - 60px);
+}
+
+@mixin background($image) {
+	@if $showImage {
+		background: #{$image};
+		background-attachment: fixed;
+		background-size: cover;
+		background-position: center;
+
+		&:before {
+			content: '';
+			position: fixed;
+			top: 0;
+			right: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba($primaryClr, $backgroundOpacity);
+			z-index: -100;
+		}
+	}
+}
+
+@mixin wrapper($max-width, $padding) {
+	max-width: #{$max-width}px;
+	margin: 0 auto;
+	padding: 0 #{$padding}px;
+}
