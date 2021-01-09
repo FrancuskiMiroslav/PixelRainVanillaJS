@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 		let particlesArray = [];
-		const numberOfParticles = 5000;
+		const numberOfParticles = 3000;
 
 		let mappedImage = [];
 		for (let y = 0; y < canvas.height; y++) {
@@ -30,7 +30,10 @@ document.addEventListener('DOMContentLoaded', function () {
 				const green = pixels.data[y * 4 * pixels.width + (x * 4 + 1)];
 				const blue = pixels.data[y * 4 * pixels.width + (x * 4 + 2)];
 				const brightness = calculateRealtiveBrightness(red, green, blue);
-				const cell = [(cellBrightness = brightness)];
+				const cell = [
+					(cellBrightness = brightness),
+					(cellColor = `rgb(${red}, ${green}, ${blue})`),
+				];
 
 				row.push(cell);
 			}
@@ -74,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			draw() {
 				ctx.beginPath();
 
-				ctx.fillStyle = `rgb(200, 150, 100)`;
+				ctx.fillStyle = mappedImage[this.position1][this.position2][1];
 
 				ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
 				ctx.fill();
@@ -90,14 +93,13 @@ document.addEventListener('DOMContentLoaded', function () {
 		init();
 
 		function animate() {
-			ctx.globalAlpha = 0.05;
-			ctx.fillStyle = 'rgb(50, 50, 50)';
+			ctx.globalAlpha = 0.02;
+			ctx.fillStyle = 'rgb(0, 0, 0)';
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
-			ctx.drawImage(myImage, 0, 0, canvas.width, canvas.height);
-			ctx.globalAlpha = 0.2;
+			ctx.globalAlpha = 0.001;
 			particlesArray.forEach((particle) => {
 				particle.update();
-				ctx.globalAlpha = particle.speed * 0.5;
+				ctx.globalAlpha = particle.speed;
 				particle.draw();
 			});
 			requestAnimationFrame(animate);
