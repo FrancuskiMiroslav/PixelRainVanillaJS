@@ -12,15 +12,15 @@ document.addEventListener('DOMContentLoaded', function () {
 	myImage.addEventListener('load', (e) => {
 		const canvas = document.getElementById('canvas1');
 		const ctx = canvas.getContext('2d');
-		canvas.width = 720;
-		canvas.height = 540;
+		canvas.width = 1440;
+		canvas.height = 1080;
 
 		ctx.drawImage(myImage, 0, 0, canvas.width, canvas.height);
 		const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 		let particlesArray = [];
-		const numberOfParticles = 3000;
+		const numberOfParticles = 5000;
 
 		let mappedImage = [];
 		for (let y = 0; y < canvas.height; y++) {
@@ -54,30 +54,49 @@ document.addEventListener('DOMContentLoaded', function () {
 				this.x = Math.random() * canvas.width;
 				this.y = 0;
 				this.speed = 0;
-				this.velocity = Math.random() * 0.5;
-				this.size = Math.random() * 1.5 + 1;
+				this.velocity = Math.random();
+				this.size = Math.random() * 2 + 1;
 				this.position1 = Math.floor(this.y);
 				this.position2 = Math.floor(this.x);
+				this.angle = 0;
 			}
 
 			update() {
 				this.position1 = Math.floor(this.y);
 				this.position2 = Math.floor(this.x);
-				this.speed = mappedImage[this.position1][this.position2][0];
-				let movement = 2.5 - this.speed + this.velocity;
+				if (
+					mappedImage[this.position1] &&
+					mappedImage[this.position1][this.position2]
+				) {
+					this.speed = mappedImage[this.position1][this.position2][0];
+				}
 
-				this.y += movement;
+				let movement = 2.5 - this.speed + this.velocity;
+				this.angle += this.speed / 100;
+
+				this.y += movement + Math.sin(this.angle) * 2;
+				this.x += movement + Math.cos(this.angle) * 1;
 
 				if (this.y >= canvas.height) {
 					this.y = 0;
 					this.x = Math.random() * canvas.width;
+				}
+
+				if (this.x >= canvas.width) {
+					this.x = 0;
+					this.y = Math.random() * canvas.height;
 				}
 			}
 
 			draw() {
 				ctx.beginPath();
 
-				ctx.fillStyle = mappedImage[this.position1][this.position2][1];
+				if (
+					mappedImage[this.position1] &&
+					mappedImage[this.position1][this.position2]
+				) {
+					ctx.fillStyle = mappedImage[this.position1][this.position2][1];
+				}
 
 				ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
 				ctx.fill();
@@ -96,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			ctx.globalAlpha = 0.02;
 			ctx.fillStyle = 'rgb(0, 0, 0)';
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
-			ctx.globalAlpha = 0.001;
+			ctx.globalAlpha = 0.005;
 			particlesArray.forEach((particle) => {
 				particle.update();
 				ctx.globalAlpha = particle.speed;
